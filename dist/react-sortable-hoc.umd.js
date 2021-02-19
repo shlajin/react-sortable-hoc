@@ -783,6 +783,9 @@
             key: 'componentDidMount',
             value: function componentDidMount() {
               var node = this.wrappedInstance.current;
+              console.log({
+                wrappedInstance: this.wrappedInstance,
+              });
               node.sortableHandle = true;
             },
           },
@@ -801,12 +804,9 @@
             value: function render() {
               return React.createElement(
                 WrappedComponent,
-                _extends_1(
-                  {
-                    ref: this.wrappedInstance,
-                  },
-                  this.props,
-                ),
+                _extends_1({}, this.props, {
+                  ref: this.wrappedInstance,
+                }),
               );
             },
           },

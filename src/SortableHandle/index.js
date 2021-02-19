@@ -12,6 +12,7 @@ export default function sortableHandle(
 
     componentDidMount() {
       const node = this.wrappedInstance.current;
+      console.log({wrappedInstance: this.wrappedInstance});
       node.sortableHandle = true;
     }
 
@@ -26,7 +27,7 @@ export default function sortableHandle(
     wrappedInstance = React.createRef();
 
     render() {
-      return <WrappedComponent ref={this.wrappedInstance} {...this.props} />;
+      return <WrappedComponent {...this.props} ref={this.wrappedInstance} />;
     }
   };
 }

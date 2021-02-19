@@ -449,6 +449,9 @@ function sortableHandle(WrappedComponent) {
           key: 'componentDidMount',
           value: function componentDidMount() {
             var node = this.wrappedInstance.current;
+            console.log({
+              wrappedInstance: this.wrappedInstance,
+            });
             node.sortableHandle = true;
           },
         },
@@ -467,12 +470,9 @@ function sortableHandle(WrappedComponent) {
           value: function render() {
             return createElement(
               WrappedComponent,
-              _extends(
-                {
-                  ref: this.wrappedInstance,
-                },
-                this.props,
-              ),
+              _extends({}, this.props, {
+                ref: this.wrappedInstance,
+              }),
             );
           },
         },
