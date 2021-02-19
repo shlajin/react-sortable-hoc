@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
-
+import mergeRefs from 'react-merge-refs';
 import Manager from '../Manager';
 import {isSortableHandle} from '../SortableHandle';
 
@@ -45,6 +44,8 @@ export default function sortableContainer(
   config = {withRef: false},
 ) {
   return class WithSortableContainer extends React.Component {
+    ref = React.createRef();
+
     constructor(props) {
       super(props);
       const manager = new Manager();
@@ -97,7 +98,9 @@ export default function sortableContainer(
 
         Object.keys(this.events).forEach((key) =>
           events[key].forEach((eventName) =>
-            this.container.addEventListener(eventName, this.events[key], { passive: false }),
+            this.container.addEventListener(eventName, this.events[key], {
+              passive: false,
+            }),
           ),
         );
 
@@ -395,27 +398,23 @@ export default function sortableContainer(
         this.listenerNode = event.touches ? node : this.contentWindow;
 
         if (isKeySorting) {
-          this.listenerNode.addEventListener('wheel', this.handleKeyEnd, { passive: true });
-          this.listenerNode.addEventListener(
-            'mousedown',
-            this.handleKeyEnd,
-            { passive: true },
-          );
+          this.listenerNode.addEventListener('wheel', this.handleKeyEnd, {
+            passive: true,
+          });
+          this.listenerNode.addEventListener('mousedown', this.handleKeyEnd, {
+            passive: true,
+          });
           this.listenerNode.addEventListener('keydown', this.handleKeyDown);
         } else {
           events.move.forEach((eventName) =>
-            this.listenerNode.addEventListener(
-              eventName,
-              this.handleSortMove,
-              { passive: false },
-            ),
+            this.listenerNode.addEventListener(eventName, this.handleSortMove, {
+              passive: false,
+            }),
           );
           events.end.forEach((eventName) =>
-            this.listenerNode.addEventListener(
-              eventName,
-              this.handleSortEnd,
-              { passive: false },
-            ),
+            this.listenerNode.addEventListener(eventName, this.handleSortEnd, {
+              passive: false,
+            }),
           );
         }
 
@@ -902,7 +901,7 @@ export default function sortableContainer(
       const {getContainer} = this.props;
 
       if (typeof getContainer !== 'function') {
-        return findDOMNode(this);
+        return this.ref.current;
       }
 
       return getContainer(
@@ -1048,7 +1047,10 @@ export default function sortableContainer(
 
       return (
         <SortableContext.Provider value={this.sortableContextValue}>
-          <WrappedComponent ref={ref} {...omit(this.props, omittedProps)} />
+          <WrappedComponent
+            ref={ref ? mergeRefs(ref, this.ref) : this.ref}
+            {...omit(this.props, omittedProps)}
+          />
         </SortableContext.Provider>
       );
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
+import mergeRefs from 'react-merge-refs';
 import invariant from 'invariant';
 import {SortableContext} from '../SortableContainer';
 
@@ -32,6 +32,8 @@ export default function sortableElement(
       collection: 0,
     };
 
+    ref = React.createRef();
+
     componentDidMount() {
       this.register();
     }
@@ -59,7 +61,7 @@ export default function sortableElement(
 
     register() {
       const {collection, disabled, index} = this.props;
-      const node = findDOMNode(this);
+      const node = this.ref.current;
 
       node.sortableInfo = {
         collection,
@@ -91,7 +93,12 @@ export default function sortableElement(
     render() {
       const ref = config.withRef ? this.wrappedInstance : null;
 
-      return <WrappedComponent ref={ref} {...omit(this.props, omittedProps)} />;
+      return (
+        <WrappedComponent
+          ref={ref ? mergeRefs(this.ref, ref) : this.ref}
+          {...omit(this.props, omittedProps)}
+        />
+      );
     }
   };
 }

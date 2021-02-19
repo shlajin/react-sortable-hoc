@@ -33,8 +33,8 @@ var _defineProperty = _interopDefault(
   require('@babel/runtime/helpers/defineProperty'),
 );
 var React = require('react');
-var reactDom = require('react-dom');
 var invariant = _interopDefault(require('invariant'));
+var mergeRefs = _interopDefault(require('react-merge-refs'));
 var _toConsumableArray = _interopDefault(
   require('@babel/runtime/helpers/toConsumableArray'),
 );
@@ -464,6 +464,12 @@ function sortableHandle(WrappedComponent) {
 
         _defineProperty(
           _assertThisInitialized(_assertThisInitialized(_this)),
+          'ref',
+          React.createRef(),
+        );
+
+        _defineProperty(
+          _assertThisInitialized(_assertThisInitialized(_this)),
           'wrappedInstance',
           React.createRef(),
         );
@@ -475,7 +481,7 @@ function sortableHandle(WrappedComponent) {
         {
           key: 'componentDidMount',
           value: function componentDidMount() {
-            var node = reactDom.findDOMNode(this);
+            var node = this.ref.current;
             node.sortableHandle = true;
           },
         },
@@ -497,7 +503,7 @@ function sortableHandle(WrappedComponent) {
               WrappedComponent,
               _extends(
                 {
-                  ref: ref,
+                  ref: ref ? mergeRefs(ref, this.ref) : this.ref,
                 },
                 this.props,
               ),
@@ -764,6 +770,12 @@ function sortableContainer(WrappedComponent) {
         _this = _possibleConstructorReturn(
           this,
           _getPrototypeOf(WithSortableContainer).call(this, props),
+        );
+
+        _defineProperty(
+          _assertThisInitialized(_assertThisInitialized(_this)),
+          'ref',
+          React.createRef(),
         );
 
         _defineProperty(
@@ -1089,13 +1101,17 @@ function sortableContainer(WrappedComponent) {
                       _this.listenerNode.addEventListener(
                         'wheel',
                         _this.handleKeyEnd,
-                        true,
+                        {
+                          passive: true,
+                        },
                       );
 
                       _this.listenerNode.addEventListener(
                         'mousedown',
                         _this.handleKeyEnd,
-                        true,
+                        {
+                          passive: true,
+                        },
                       );
 
                       _this.listenerNode.addEventListener(
@@ -1107,14 +1123,18 @@ function sortableContainer(WrappedComponent) {
                         return _this.listenerNode.addEventListener(
                           eventName,
                           _this.handleSortMove,
-                          false,
+                          {
+                            passive: false,
+                          },
                         );
                       });
                       events.end.forEach(function(eventName) {
                         return _this.listenerNode.addEventListener(
                           eventName,
                           _this.handleSortEnd,
-                          false,
+                          {
+                            passive: false,
+                          },
                         );
                       });
                     }
@@ -1599,7 +1619,9 @@ function sortableContainer(WrappedComponent) {
                   return _this2.container.addEventListener(
                     eventName,
                     _this2.events[key],
-                    false,
+                    {
+                      passive: false,
+                    },
                   );
                 });
               });
@@ -1953,7 +1975,7 @@ function sortableContainer(WrappedComponent) {
             var getContainer = this.props.getContainer;
 
             if (typeof getContainer !== 'function') {
-              return reactDom.findDOMNode(this);
+              return this.ref.current;
             }
 
             return getContainer(
@@ -1974,7 +1996,7 @@ function sortableContainer(WrappedComponent) {
                 WrappedComponent,
                 _extends(
                   {
-                    ref: ref,
+                    ref: ref ? mergeRefs(ref, this.ref) : this.ref,
                   },
                   omit(this.props, omittedProps),
                 ),
@@ -2083,6 +2105,12 @@ function sortableElement(WrappedComponent) {
 
         _defineProperty(
           _assertThisInitialized(_assertThisInitialized(_this)),
+          'ref',
+          React.createRef(),
+        );
+
+        _defineProperty(
+          _assertThisInitialized(_assertThisInitialized(_this)),
           'wrappedInstance',
           React.createRef(),
         );
@@ -2129,7 +2157,7 @@ function sortableElement(WrappedComponent) {
               collection = _this$props.collection,
               disabled = _this$props.disabled,
               index = _this$props.index;
-            var node = reactDom.findDOMNode(this);
+            var node = this.ref.current;
             node.sortableInfo = {
               collection: collection,
               disabled: disabled,
@@ -2171,7 +2199,7 @@ function sortableElement(WrappedComponent) {
               WrappedComponent,
               _extends(
                 {
-                  ref: ref,
+                  ref: ref ? mergeRefs(this.ref, ref) : this.ref,
                 },
                 omit(this.props, omittedProps$1),
               ),

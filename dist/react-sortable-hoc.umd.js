@@ -1,21 +1,11 @@
 (function(global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
-    ? factory(
-        exports,
-        require('react'),
-        require('react-dom'),
-        require('prop-types'),
-      )
+    ? factory(exports, require('react'), require('prop-types'))
     : typeof define === 'function' && define.amd
-    ? define(['exports', 'react', 'react-dom', 'prop-types'], factory)
+    ? define(['exports', 'react', 'prop-types'], factory)
     : ((global = global || self),
-      factory(
-        (global.SortableHOC = {}),
-        global.React,
-        global.ReactDOM,
-        global.PropTypes,
-      ));
-})(this, function(exports, React, reactDom, PropTypes) {
+      factory((global.SortableHOC = {}), global.React, global.PropTypes));
+})(this, function(exports, React, PropTypes) {
   'use strict';
 
   PropTypes =
@@ -318,6 +308,18 @@
   };
 
   var invariant_1 = invariant;
+
+  function mergeRefs(refs) {
+    return function(value) {
+      refs.forEach(function(ref) {
+        if (typeof ref === 'function') {
+          ref(value);
+        } else if (ref != null) {
+          ref.current = value;
+        }
+      });
+    };
+  }
 
   var Manager = (function() {
     function Manager() {
@@ -781,6 +783,12 @@
 
           defineProperty(
             assertThisInitialized(assertThisInitialized(_this)),
+            'ref',
+            React.createRef(),
+          );
+
+          defineProperty(
+            assertThisInitialized(assertThisInitialized(_this)),
             'wrappedInstance',
             React.createRef(),
           );
@@ -792,7 +800,7 @@
           {
             key: 'componentDidMount',
             value: function componentDidMount() {
-              var node = reactDom.findDOMNode(this);
+              var node = this.ref.current;
               node.sortableHandle = true;
             },
           },
@@ -814,7 +822,7 @@
                 WrappedComponent,
                 _extends_1(
                   {
-                    ref: ref,
+                    ref: ref ? mergeRefs(ref, this.ref) : this.ref,
                   },
                   this.props,
                 ),
@@ -1084,6 +1092,12 @@
           _this = possibleConstructorReturn(
             this,
             getPrototypeOf(WithSortableContainer).call(this, props),
+          );
+
+          defineProperty(
+            assertThisInitialized(assertThisInitialized(_this)),
+            'ref',
+            React.createRef(),
           );
 
           defineProperty(
@@ -1409,13 +1423,17 @@
                         _this.listenerNode.addEventListener(
                           'wheel',
                           _this.handleKeyEnd,
-                          true,
+                          {
+                            passive: true,
+                          },
                         );
 
                         _this.listenerNode.addEventListener(
                           'mousedown',
                           _this.handleKeyEnd,
-                          true,
+                          {
+                            passive: true,
+                          },
                         );
 
                         _this.listenerNode.addEventListener(
@@ -1427,14 +1445,18 @@
                           return _this.listenerNode.addEventListener(
                             eventName,
                             _this.handleSortMove,
-                            false,
+                            {
+                              passive: false,
+                            },
                           );
                         });
                         events.end.forEach(function(eventName) {
                           return _this.listenerNode.addEventListener(
                             eventName,
                             _this.handleSortEnd,
-                            false,
+                            {
+                              passive: false,
+                            },
                           );
                         });
                       }
@@ -1920,7 +1942,9 @@
                     return _this2.container.addEventListener(
                       eventName,
                       _this2.events[key],
-                      false,
+                      {
+                        passive: false,
+                      },
                     );
                   });
                 });
@@ -2281,7 +2305,7 @@
               var getContainer = this.props.getContainer;
 
               if (typeof getContainer !== 'function') {
-                return reactDom.findDOMNode(this);
+                return this.ref.current;
               }
 
               return getContainer(
@@ -2302,7 +2326,7 @@
                   WrappedComponent,
                   _extends_1(
                     {
-                      ref: ref,
+                      ref: ref ? mergeRefs(ref, this.ref) : this.ref,
                     },
                     omit(this.props, omittedProps),
                   ),
@@ -2412,6 +2436,12 @@
 
           defineProperty(
             assertThisInitialized(assertThisInitialized(_this)),
+            'ref',
+            React.createRef(),
+          );
+
+          defineProperty(
+            assertThisInitialized(assertThisInitialized(_this)),
             'wrappedInstance',
             React.createRef(),
           );
@@ -2458,7 +2488,7 @@
                 collection = _this$props.collection,
                 disabled = _this$props.disabled,
                 index = _this$props.index;
-              var node = reactDom.findDOMNode(this);
+              var node = this.ref.current;
               node.sortableInfo = {
                 collection: collection,
                 disabled: disabled,
@@ -2500,7 +2530,7 @@
                 WrappedComponent,
                 _extends_1(
                   {
-                    ref: ref,
+                    ref: ref ? mergeRefs(this.ref, ref) : this.ref,
                   },
                   omit(this.props, omittedProps$1),
                 ),

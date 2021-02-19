@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
+import mergeRefs from 'react-merge-refs';
 import invariant from 'invariant';
 
 import {provideDisplayName} from '../utils';
@@ -10,9 +10,10 @@ export default function sortableHandle(
 ) {
   return class WithSortableHandle extends React.Component {
     static displayName = provideDisplayName('sortableHandle', WrappedComponent);
+    ref = React.createRef();
 
     componentDidMount() {
-      const node = findDOMNode(this);
+      const node = this.ref.current;
       node.sortableHandle = true;
     }
 
@@ -29,7 +30,12 @@ export default function sortableHandle(
     render() {
       const ref = config.withRef ? this.wrappedInstance : null;
 
-      return <WrappedComponent ref={ref} {...this.props} />;
+      return (
+        <WrappedComponent
+          ref={ref ? mergeRefs(ref, this.ref) : this.ref}
+          {...this.props}
+        />
+      );
     }
   };
 }
