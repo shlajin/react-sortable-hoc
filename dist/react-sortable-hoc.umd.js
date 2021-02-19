@@ -783,12 +783,6 @@
 
           defineProperty(
             assertThisInitialized(assertThisInitialized(_this)),
-            'ref',
-            React.createRef(),
-          );
-
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
             'wrappedInstance',
             React.createRef(),
           );
@@ -800,7 +794,7 @@
           {
             key: 'componentDidMount',
             value: function componentDidMount() {
-              var node = this.ref.current;
+              var node = this.wrappedInstance.current;
               node.sortableHandle = true;
             },
           },
@@ -817,12 +811,11 @@
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? this.wrappedInstance : null;
               return React.createElement(
                 WrappedComponent,
                 _extends_1(
                   {
-                    ref: ref ? mergeRefs(ref, this.ref) : this.ref,
+                    ref: this.wrappedInstance,
                   },
                   this.props,
                 ),

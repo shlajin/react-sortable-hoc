@@ -464,12 +464,6 @@ function sortableHandle(WrappedComponent) {
 
         _defineProperty(
           _assertThisInitialized(_assertThisInitialized(_this)),
-          'ref',
-          React.createRef(),
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
           'wrappedInstance',
           React.createRef(),
         );
@@ -481,7 +475,7 @@ function sortableHandle(WrappedComponent) {
         {
           key: 'componentDidMount',
           value: function componentDidMount() {
-            var node = this.ref.current;
+            var node = this.wrappedInstance.current;
             node.sortableHandle = true;
           },
         },
@@ -498,12 +492,11 @@ function sortableHandle(WrappedComponent) {
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstance : null;
             return React.createElement(
               WrappedComponent,
               _extends(
                 {
-                  ref: ref ? mergeRefs(ref, this.ref) : this.ref,
+                  ref: this.wrappedInstance,
                 },
                 this.props,
               ),
