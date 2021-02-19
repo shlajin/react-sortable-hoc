@@ -10,7 +10,6 @@ import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitial
 import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 import {createRef, createElement, Component, createContext} from 'react';
 import invariant from 'invariant';
-import mergeRefs from 'react-merge-refs';
 import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
 import PropTypes from 'prop-types';
 
@@ -737,12 +736,6 @@ function sortableContainer(WrappedComponent) {
         _this = _possibleConstructorReturn(
           this,
           _getPrototypeOf(WithSortableContainer).call(this, props),
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'ref',
-          createRef(),
         );
 
         _defineProperty(
@@ -1942,7 +1935,7 @@ function sortableContainer(WrappedComponent) {
             var getContainer = this.props.getContainer;
 
             if (typeof getContainer !== 'function') {
-              return this.ref.current;
+              return this.wrappedInstance.current;
             }
 
             return getContainer(
@@ -1953,7 +1946,6 @@ function sortableContainer(WrappedComponent) {
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstance : null;
             return createElement(
               SortableContext.Provider,
               {
@@ -1963,7 +1955,7 @@ function sortableContainer(WrappedComponent) {
                 WrappedComponent,
                 _extends(
                   {
-                    ref: ref ? mergeRefs(ref, this.ref) : this.ref,
+                    ref: this.wrappedInstance,
                   },
                   omit(this.props, omittedProps),
                 ),
@@ -2072,12 +2064,6 @@ function sortableElement(WrappedComponent) {
 
         _defineProperty(
           _assertThisInitialized(_assertThisInitialized(_this)),
-          'ref',
-          createRef(),
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
           'wrappedInstance',
           createRef(),
         );
@@ -2124,7 +2110,7 @@ function sortableElement(WrappedComponent) {
               collection = _this$props.collection,
               disabled = _this$props.disabled,
               index = _this$props.index;
-            var node = this.ref.current;
+            var node = this.wrappedInstance.current;
             node.sortableInfo = {
               collection: collection,
               disabled: disabled,
@@ -2161,12 +2147,11 @@ function sortableElement(WrappedComponent) {
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstance : null;
             return createElement(
               WrappedComponent,
               _extends(
                 {
-                  ref: ref ? mergeRefs(this.ref, ref) : this.ref,
+                  ref: this.wrappedInstance,
                 },
                 omit(this.props, omittedProps$1),
               ),

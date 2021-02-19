@@ -309,18 +309,6 @@
 
   var invariant_1 = invariant;
 
-  function mergeRefs(refs) {
-    return function(value) {
-      refs.forEach(function(ref) {
-        if (typeof ref === 'function') {
-          ref(value);
-        } else if (ref != null) {
-          ref.current = value;
-        }
-      });
-    };
-  }
-
   var Manager = (function() {
     function Manager() {
       classCallCheck(this, Manager);
@@ -1085,12 +1073,6 @@
           _this = possibleConstructorReturn(
             this,
             getPrototypeOf(WithSortableContainer).call(this, props),
-          );
-
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
-            'ref',
-            React.createRef(),
           );
 
           defineProperty(
@@ -2298,7 +2280,7 @@
               var getContainer = this.props.getContainer;
 
               if (typeof getContainer !== 'function') {
-                return this.ref.current;
+                return this.wrappedInstance.current;
               }
 
               return getContainer(
@@ -2309,7 +2291,6 @@
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? this.wrappedInstance : null;
               return React.createElement(
                 SortableContext.Provider,
                 {
@@ -2319,7 +2300,7 @@
                   WrappedComponent,
                   _extends_1(
                     {
-                      ref: ref ? mergeRefs(ref, this.ref) : this.ref,
+                      ref: this.wrappedInstance,
                     },
                     omit(this.props, omittedProps),
                   ),
@@ -2429,12 +2410,6 @@
 
           defineProperty(
             assertThisInitialized(assertThisInitialized(_this)),
-            'ref',
-            React.createRef(),
-          );
-
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
             'wrappedInstance',
             React.createRef(),
           );
@@ -2481,7 +2456,7 @@
                 collection = _this$props.collection,
                 disabled = _this$props.disabled,
                 index = _this$props.index;
-              var node = this.ref.current;
+              var node = this.wrappedInstance.current;
               node.sortableInfo = {
                 collection: collection,
                 disabled: disabled,
@@ -2518,12 +2493,11 @@
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? this.wrappedInstance : null;
               return React.createElement(
                 WrappedComponent,
                 _extends_1(
                   {
-                    ref: ref ? mergeRefs(this.ref, ref) : this.ref,
+                    ref: this.wrappedInstance,
                   },
                   omit(this.props, omittedProps$1),
                 ),

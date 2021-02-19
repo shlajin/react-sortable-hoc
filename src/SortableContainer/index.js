@@ -1,6 +1,5 @@
 import * as React from 'react';
 import invariant from 'invariant';
-import mergeRefs from 'react-merge-refs';
 import Manager from '../Manager';
 import {isSortableHandle} from '../SortableHandle';
 
@@ -44,8 +43,6 @@ export default function sortableContainer(
   config = {withRef: false},
 ) {
   return class WithSortableContainer extends React.Component {
-    ref = React.createRef();
-
     constructor(props) {
       super(props);
       const manager = new Manager();
@@ -901,7 +898,7 @@ export default function sortableContainer(
       const {getContainer} = this.props;
 
       if (typeof getContainer !== 'function') {
-        return this.ref.current;
+        return this.wrappedInstance.current;
       }
 
       return getContainer(
@@ -1043,12 +1040,10 @@ export default function sortableContainer(
     };
 
     render() {
-      const ref = config.withRef ? this.wrappedInstance : null;
-
       return (
         <SortableContext.Provider value={this.sortableContextValue}>
           <WrappedComponent
-            ref={ref ? mergeRefs(ref, this.ref) : this.ref}
+            ref={this.wrappedInstance}
             {...omit(this.props, omittedProps)}
           />
         </SortableContext.Provider>
